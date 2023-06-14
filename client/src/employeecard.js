@@ -6,7 +6,7 @@ class EmployeeCard extends Component {
     return (
         <div className="card">
             <img
-                src="{this.props.employee.avatar}"
+                src={this.props.employee.avatar}
                 alt="Avatar"
                 width="240px"
             />
