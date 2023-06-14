@@ -22,5 +22,6 @@
         "WAMP",
         "WORKDIR",
         "XAMPP"
-    ]
+    ],
+    "cmake.configureOnOpen": false
 }
