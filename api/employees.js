@@ -9,6 +9,8 @@ const dbClient = new Client({
 
 dbClient.connect();
 
+router.use(express.urlencoded({extended: false}));
+
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
     const queryTemplate = "SELECT * FROM employees WHERE id = $1";
