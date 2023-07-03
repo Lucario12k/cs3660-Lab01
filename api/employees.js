@@ -1,0 +1,45 @@
+const router = require("express").Router();
+const { Client } = require("pg");
+
+const dbClient = new Client({
+    password: "root",
+    user: "root",
+    host: "postgres",
+});
+
+dbClient.connect();
+
+router.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    const queryTemplate = "SELECT * FROM employees WHERE id = $1";
+
+    const results = await dbClient
+        .query(queryTemplate, [id])
+        .then((payload) => {
+            return payload.rows;
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+
+    res.setHeader("Content-Type", "application/json");
+    res.status(200);
+    res.send(JSON.stringify(results));
+});
+
+router.get("/", async (req, res) => {
+    const results = await dbClient
+        .query("SELECT * FROM employees")
+        .then((payload) => {
+            return payload.rows;
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+
+    res.setHeader("Content-Type", "application/json");
+    res.status(200);
+    res.send(JSON.stringify(results));
+});
+
+module.exports = router;
