@@ -61,4 +61,22 @@ router.update("/:id", async (req, res) => {
         });
 });
 
+router.delete("/:id", async (req, res) => {
+    const id = req.params.id;
+    const queryTemplate = "DELETE FROM employees WHERE id = $1";
+
+    await dbClient
+        .query(queryTemplate, [id])
+        .then((payload) => {
+            if (payload.rowCount == 0) {
+                res.sendStatus(404);
+            } else {
+                res.sendStatus(204);
+            }
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+});
+
 module.exports = router;
