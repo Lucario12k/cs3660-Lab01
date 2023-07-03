@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import EmployeeCard from './employeecard'
 
 class EmployeeList extends Component {
@@ -9,18 +9,18 @@ class EmployeeList extends Component {
   }
 
   componentDidMount() {
-    fetch('/employees')
-    .then((response) => response.json())
-    .then(data => {
+    fetch('/api/employees')
+      .then((response) => response.json())
+      .then(data => {
         this.setState({ employees: data });
-    });
+      });
   }
 
   render() {
     return (
-        <div>
-            {this.state.employees.map(employee => <EmployeeCard key={employee.id} employee={employee} />)} 
-        </div>
+      <div>
+        {this.state.employees.map(employee => <EmployeeCard key={employee.id} employee={employee} />)}
+      </div>
     )
   }
 }
