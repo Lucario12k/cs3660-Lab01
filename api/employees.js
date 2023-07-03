@@ -42,6 +42,24 @@ router.get("/", async (req, res) => {
     res.send(JSON.stringify(results));
 });
 
+router.post("/", async (req, res) => {
+    const employee = req.body;
+    const queryTemplate = "INSERT INTO employees(name, title, avatar) VALUES ($1, $2, $3)";
+
+    const results = await dbClient
+        .query(queryTemplate, [employee.name, employee.title, employee.avatar])
+        .then((payload) => {
+            return payload.rows[0];
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+
+    res.setHeader("Content-Type", "application/json");
+    res.status(201);
+    res.send(JSON.stringify(results));
+});
+
 router.update("/:id", async (req, res) => {
     const id = req.params.id;
     const employee = req.body;
