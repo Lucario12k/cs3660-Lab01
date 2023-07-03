@@ -42,4 +42,23 @@ router.get("/", async (req, res) => {
     res.send(JSON.stringify(results));
 });
 
+router.update("/:id", async (req, res) => {
+    const id = req.params.id;
+    const employee = req.body;
+    const queryTemplate = "UPDATE employees SET (name, title, avatar)  = ($2, $3, $4) WHERE id = $1";
+
+    await dbClient
+        .query(queryTemplate, [id, employee.name, employee.title, employee.avatar])
+        .then((payload) => {
+            if (payload.rowCount == 0) {
+                res.sendStatus(404);
+            } else {
+                res.sendStatus(204);
+            }
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+});
+
 module.exports = router;
