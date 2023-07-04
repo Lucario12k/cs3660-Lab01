@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import EmployeeCard from './employeecard'
+import EmployeeCard from './EmployeeCard'
 
 class EmployeeList extends Component {
 

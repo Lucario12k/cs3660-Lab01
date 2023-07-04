@@ -1,12 +1,17 @@
 import './App.css';
-import EmployeeList from './employeelist'
+import EmployeeList from './EmployeeList'
 
 function App() {
   return (
     <div className="App">
       <div>
-        This is the employee list: count:0
-        <EmployeeList></EmployeeList>
+        <EmployeeDeleter/>
+      </div>
+      <div>
+        <EmployeeGetterAll/>
+      </div>
+      <div>
+        <EmployeeEditor/>
       </div>
     </div>
   );
