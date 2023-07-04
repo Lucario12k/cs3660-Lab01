@@ -1,5 +1,8 @@
 import './App.css';
-import EmployeeList from './EmployeeList'
+import EmployeeDeleter from './EmployeeDeleter';
+import EmployeeGetterAll from './EmployeeGetterAll';
+import EmployeeUpdater from './EmployeeUpdater';
+
 
 function App() {
   return (
@@ -11,7 +14,7 @@ function App() {
         <EmployeeGetterAll/>
       </div>
       <div>
-        <EmployeeEditor/>
+        <EmployeeUpdater/>
       </div>
     </div>
   );

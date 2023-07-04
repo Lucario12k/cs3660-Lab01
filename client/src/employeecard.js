@@ -11,6 +11,7 @@ class EmployeeCard extends Component {
                 width="240px"
             />
             <div className="container">
+                <h4>#{this.props.employee.id}</h4>
                 <h4>{this.props.employee.name}</h4>
                 <p>{this.props.employee.title}</p>
             </div>

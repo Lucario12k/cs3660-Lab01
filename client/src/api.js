@@ -1,41 +1,45 @@
 function getAll() {
-    return fetch('/api/employees')
-        .then((response) => response.json());
+    return fetch('/api/employees');
 }
 
 function getById(id) {
-    return fetch(`/api/employees/${id}`)
-        .then((response) => response.json());
+    return fetch(`/api/employees/${id}`);
 }
 
 function postNewEmployee(employee) {
-    const formData = new FormData();
+    const formData = new URLSearchParams();
     formData.append('name', employee.name);
     formData.append('title', employee.title);
     formData.append('avatar', employee.avatar);
 
     return fetch('/api/employees', {
         method: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
         body: formData
-    }).then((response) => response.json());
+    });
 }
 
 function updateById(id, employee) {
-    const formData = new FormData();
+    const formData = new URLSearchParams();
     formData.append('name', employee.name);
     formData.append('title', employee.title);
     formData.append('avatar', employee.avatar);
 
     return fetch(`/api/employees/${id}`, {
         method: 'PUT',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
         body: formData
-    }).then((response) => response.json());
+    });
 }
 
 function deleteById(id) {
     return fetch(`/api/employees/${id}`, {
         method: 'DELETE'
-    }).then((response) => response.json());
+    });
 }
 
 export {getAll, getById, postNewEmployee, updateById, deleteById};

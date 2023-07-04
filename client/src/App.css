@@ -1,8 +1,5 @@
 .App {
   text-align: center;
-}
-
-.App-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -13,6 +10,20 @@
   color: white;
 }
 
-.App div:not(:first-child) {
+.App > div:not(:first-child) {
+  width: 90vw;
   border-top: aliceblue 2px solid;
+  margin-top: 16px;
+}
+
+.EmployeeList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.EmployeeList > * {
+  padding: 10px 10px;
 }

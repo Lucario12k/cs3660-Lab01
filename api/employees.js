@@ -24,6 +24,10 @@ router.get("/:id", async (req, res) => {
         .catch((err) => {
             res.status(400).send(err);
         });
+    
+    if (results.rowCount == 0) {
+        res.sendStatus(404);
+    }
 
     res.setHeader("Content-Type", "application/json");
     res.status(200);
