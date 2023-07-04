@@ -1,4 +1,5 @@
-const router = require("express").Router();
+const express = require("express");
+const router = express.Router();
 const { Client } = require("pg");
 
 const dbClient = new Client({
@@ -62,7 +63,7 @@ router.post("/", async (req, res) => {
     res.send(JSON.stringify(results));
 });
 
-router.update("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     const id = req.params.id;
     const employee = req.body;
     const queryTemplate = "UPDATE employees SET (name, title, avatar)  = ($2, $3, $4) WHERE id = $1";
