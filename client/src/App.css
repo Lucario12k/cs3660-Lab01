@@ -1,15 +1,34 @@
 .App {
-  text-align: center;
   background-color: #282c34;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 3fr 2fr;
+  grid-template-areas:
+    "header header"
+    "list   editor";
+
+  text-align: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
+header {
+  grid-area: header;
+  border-bottom: 2px solid aliceblue;
+}
+
+div.list {
+  grid-area: list;
+}
+
+div.editor {
+  grid-area: editor;
+  border-left: 2px solid aliceblue;
+}
+
+/*
 .App > div:not(:first-child) {
   width: 90vw;
   border-top: aliceblue 2px solid;
@@ -27,3 +46,4 @@
 .EmployeeList > * {
   padding: 10px 10px;
 }
+*/
