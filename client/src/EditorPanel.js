@@ -10,6 +10,8 @@ function EditorPanel() {
     async function handleSubmit(event) {
         event.preventDefault();
 
+        setAvatar("https://api.dicebear.com/6.x/bottts/svg?seed=" + encodeURIComponent(name));
+
         if (event.nativeEvent.submitter.id == "editor-cancel") {
             handleCancel();
         } else {
@@ -41,7 +43,7 @@ function EditorPanel() {
 
     return (
         <div className="EditorPanel">
-            <img src="https://api.dicebear.com/6.x/bottts/svg?seed=test" />
+            <img src={avatar} />
             <form onSubmit={handleSubmit}>
                 <label id="editor-label-name" htmlFor="editor-input-name">
                     Name:
