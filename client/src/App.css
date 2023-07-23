@@ -37,6 +37,11 @@ div.editor {
   border-left: 2px solid aliceblue;
 }
 
+input,
+input::placeholder {
+  font-size: 2.5vh;
+}
+
 /*
 .App > div:not(:first-child) {
   width: 90vw;
