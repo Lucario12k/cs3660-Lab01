@@ -1,12 +1,21 @@
 #searchbar {
-    margin: 20px;
-    font-size: 28px;
+    margin: 20px auto;
+    font-size: 2.5vh;
 
     display: flex;
     gap: 20px;
+    max-width: 90%;
 }
 
 #searchbar .text-entry {
     flex-grow: 1;
     flex-shrink: 1;
+}
+
+#searchbar .text-entry::placeholder {
+    font-size: 2.5vh;
+}
+
+#searchbar input {
+    font-size: 2.5vh;
 }
