@@ -8,6 +8,6 @@ CREATE TABLE employees
 );
 
 INSERT INTO employees(name, title, avatar) VALUES
- ('Meadow Crystalfreak ', 'Head of Operations','https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50.jpg'),
- ('Buddy-Ray Perceptor', 'DevRel','https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50.jpg'),
- ('Prince Flitterbell', 'Marketing Guru','https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50.jpg');
+ ('Meadow Crystalfreak ', 'Head of Operations','https://api.dicebear.com/6.x/bottts/svg?seed=Meadow%20Crystalfreak'),
+ ('Buddy-Ray Perceptor', 'DevRel','https://api.dicebear.com/6.x/bottts/svg?seed=Buddy-Ray%20Perceptor'),
+ ('Prince Flitterbell', 'Marketing Guru','https://api.dicebear.com/6.x/bottts/svg?seed=Prince%20Flitterbell');
