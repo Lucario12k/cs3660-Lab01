@@ -10,7 +10,7 @@ const dbClient = new Client({
 
 dbClient.connect();
 
-router.use(express.urlencoded({extended: false}));
+router.use(express.urlencoded({ extended: false }));
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
@@ -24,7 +24,7 @@ router.get("/:id", async (req, res) => {
         .catch((err) => {
             res.status(400).send(err);
         });
-    
+
     if (results.rowCount == 0) {
         res.sendStatus(404);
     }
@@ -53,6 +53,10 @@ router.post("/", async (req, res) => {
     const employee = req.body;
     const queryTemplate = "INSERT INTO employees(name, title, avatar) VALUES ($1, $2, $3)";
 
+    if (employee.avatar == "") {
+        employee.avatar = "https://api.dicebear.com/6.x/bottts/svg?seed=" + encodeURIComponent(employee.name);
+    }
+
     const results = await dbClient
         .query(queryTemplate, [employee.name, employee.title, employee.avatar])
         .then((payload) => {
@@ -71,6 +75,10 @@ router.put("/:id", async (req, res) => {
     const id = req.params.id;
     const employee = req.body;
     const queryTemplate = "UPDATE employees SET (name, title, avatar)  = ($2, $3, $4) WHERE id = $1";
+
+    if (employee.avatar == "") {
+        employee.avatar = "https://api.dicebear.com/6.x/bottts/svg?seed=" + encodeURIComponent(employee.name);
+    }
 
     await dbClient
         .query(queryTemplate, [id, employee.name, employee.title, employee.avatar])
