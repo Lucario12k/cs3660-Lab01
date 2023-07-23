@@ -3,104 +3,80 @@ import { getById, postNewEmployee, updateById } from './api';
 import './EditorPanel.css';
 
 function EditorPanel() {
-    const [empId, setEmpId] = useState("");
     const [name, setName] = useState("");
     const [title, setTitle] = useState("");
     const [avatar, setAvatar] = useState("");
 
-    async function handleGet(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        const res = await getById(empId);
 
-        if (res.status != 200) {
-            alert(`Error ${res.status}: ${res.statusText}`);
-            return;
+        if (event.nativeEvent.submitter.id == "editor-cancel") {
+            handleCancel();
+        } else {
+            handleSave();
         }
-
-        const retEmp = (await res.json())[0];
-
-        setName(retEmp.name);
-        setTitle(retEmp.title);
-        setAvatar(retEmp.avatar);
     }
 
-    async function handleSave(event) {
-        event.preventDefault();
+    function handleCancel() {
+        console.log("Cancel");
+    }
+
+    function handleSave() {
         const employee = {
             name: name,
             title: title,
             avatar: avatar
         };
 
-        if (empId == "") {
-            const res = await postNewEmployee(employee);
+        console.log("Save");
 
-            if (res.status == 201) {
-                alert(`Successfully created new employee`);
-            } else {
-                alert(`Error ${res.status}: ${res.statusText}`);
-            }
+        /*const res = await updateById(empId, employee);
+
+        if (res.status == 204) {
+            alert(`Successfully updated employee #${empId}.`);
         } else {
-            const res = await updateById(empId, employee);
-
-            if (res.status == 204) {
-                alert(`Successfully updated employee #${empId}.`);
-            } else {
-                alert(`Error ${res.status}: ${res.statusText}`);
-            }
-        }
+            alert(`Error ${res.status}: ${res.statusText}`);
+        }*/
     }
 
     return (
-        <>
-            <form onSubmit={handleGet}>
-                <p>
-                    <label htmlFor="empId">
-                        ID:&nbsp;
-                    </label>
-                    <input
-                        type="text"
-                        id="empId"
-                        value={empId}
-                        onChange={(e) => setEmpId(e.target.value)} />
-                    &nbsp;
-                    <input type="submit" value="Get" />
-                </p>
+        <div className="EditorPanel">
+            <img src="https://api.dicebear.com/6.x/bottts/svg?seed=test" />
+            <form onSubmit={handleSubmit}>
+                <label id="editor-label-name" htmlFor="editor-input-name">
+                    Name:
+                </label>
+                <input
+                    type="text"
+                    id="editor-input-name"
+                    placeholder="Enter Name Here"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)} />
+
+                <label id="editor-label-title" htmlFor="editor-input-title">
+                    Title:
+                </label>
+                <input
+                    type="text"
+                    id="editor-input-title"
+                    placeholder="Enter Title Here"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)} />
+
+                <label id="editor-label-avatar" htmlFor="editor-input-avatar">
+                    Avatar:
+                </label>
+                <input
+                    type="text"
+                    id="editor-input-avatar"
+                    placeholder="Leave Empty for Default"
+                    value={avatar}
+                    onChange={(e) => setAvatar(e.target.value)} />
+
+                <input id="editor-cancel" type="submit" value="Cancel" />
+                <input id="editor-save" type="submit" value="Save" />
             </form>
-            <form onSubmit={handleSave}>
-                <p>
-                    <label htmlFor="name">
-                        Name:&nbsp;
-                    </label>
-                    <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)} />
-                </p>
-                <p>
-                    <label htmlFor="title">
-                        Title:&nbsp;
-                    </label>
-                    <input
-                        type="text"
-                        id="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)} />
-                </p>
-                <p>
-                    <label htmlFor="avatar">
-                        Avatar URL:&nbsp;
-                    </label>
-                    <input
-                        type="text"
-                        id="avatar"
-                        value={avatar}
-                        onChange={(e) => setAvatar(e.target.value)} />
-                </p>
-                <input type="submit" value="Save" />
-            </form>
-        </>
+        </div>
     );
 }
 

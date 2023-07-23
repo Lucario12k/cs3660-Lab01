@@ -1,0 +1,50 @@
+.EditorPanel img {
+    margin: 20px;
+    max-width: 60%;
+}
+
+.EditorPanel form {
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-areas:
+        "label-name   input-name   input-name   input-name"
+        "label-title  input-title  input-title  input-title"
+        "label-avatar input-avatar input-avatar input-avatar"
+        ".            .            cancel       save";
+
+    gap: 20px;
+    margin: 20px;
+}
+
+#editor-label-name {
+    grid-area: label-name;
+}
+
+#editor-input-name {
+    grid-area: input-name;
+}
+
+#editor-label-title {
+    grid-area: label-title;
+}
+
+#editor-input-title {
+    grid-area: input-title;
+}
+
+#editor-label-avatar {
+    grid-area: label-avatar;
+}
+
+#editor-input-avatar {
+    grid-area: input-avatar;
+}
+
+#editor-cancel {
+    grid-area: cancel;
+}
+
+#editor-save {
+    grid-area: save;
+}

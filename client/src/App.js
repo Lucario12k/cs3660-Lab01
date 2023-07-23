@@ -1,5 +1,6 @@
 import './App.css';
 import SearchBar from './SearchBar';
+import EditorPanel from './EditorPanel';
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
 
       </div>
       <div className="editor">
-
+        <EditorPanel />
       </div>
     </div>
   );
