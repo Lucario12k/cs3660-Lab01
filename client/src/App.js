@@ -1,16 +1,19 @@
+import { useState } from 'react';
 import './App.css';
 import SearchBar from './SearchBar';
 import EmployeeList from './EmployeeList';
 import EditorPanel from './EditorPanel';
 
 function App() {
+  const [searchTerms, setSearchTerms] = useState("");
+
   return (
     <div className="App">
       <header>
-        <SearchBar />
+        <SearchBar onSearch={setSearchTerms} />
       </header>
       <div className="list">
-        <EmployeeList />
+        <EmployeeList searchTerms={searchTerms} />
       </div>
       <div className="editor">
         <EditorPanel />

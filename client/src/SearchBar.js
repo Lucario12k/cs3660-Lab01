@@ -1,19 +1,19 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import './SearchBar.css';
 
-function SearchBar() {
+function SearchBar(props) {
     const [searchTerms, setSearchTerms] = useState("");
 
     async function handleSubmit(event) {
         event.preventDefault();
-        console.log(searchTerms);
+        props.onSearch(searchTerms);
     }
 
     return (
         <form id="searchbar" onSubmit={handleSubmit}>
-            <input 
+            <input
                 class="text-entry"
-                type="text" 
+                type="text"
                 id="searchTerms"
                 placeholder="Enter Name Here"
                 value={searchTerms}
