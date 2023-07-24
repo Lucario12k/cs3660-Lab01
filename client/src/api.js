@@ -6,6 +6,10 @@ function getById(id) {
     return fetch(`/api/employees/${id}`);
 }
 
+function getAllBySearch(terms) {
+    return fetch(`/api/employees/search/${encodeURIComponent(terms)}`);
+}
+
 function postNewEmployee(employee) {
     const formData = new URLSearchParams();
     formData.append('name', employee.name);
@@ -42,4 +46,4 @@ function deleteById(id) {
     });
 }
 
-export {getAll, getById, postNewEmployee, updateById, deleteById};
+export { getAll, getById, getAllBySearch, postNewEmployee, updateById, deleteById };
