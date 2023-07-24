@@ -1,5 +1,6 @@
 import './App.css';
 import SearchBar from './SearchBar';
+import EmployeeList from './EmployeeList';
 import EditorPanel from './EditorPanel';
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
         <SearchBar />
       </header>
       <div className="list">
-
+        <EmployeeList />
       </div>
       <div className="editor">
         <EditorPanel />
