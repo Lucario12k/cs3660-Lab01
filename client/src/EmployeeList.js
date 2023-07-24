@@ -1,13 +1,28 @@
 import { useState } from 'react';
+import { getAll } from './api';
 import EmployeeCard from './EmployeeCard';
+import './EmployeeList.css';
 
 function EmployeeList() {
     const [employees, setEmployees] = useState([]);
 
+    async function handleClick() {
+        const res = await getAll();
+        if (res.status != 200) {
+            alert(`Error ${res.status}: ${res.statusText}`);
+            return;
+        }
+        const data = await res.json();
+        setEmployees(data);
+    }
+
     return (
-        <div className="EmployeeList">
-            {employees.map(employee => <EmployeeCard key={employee.id} employee={employee} />)}
-        </div>
+        <>
+            <button onClick={handleClick}>Get All</button>
+            <div className="EmployeeList">
+                {employees.map(employee => <EmployeeCard key={employee.id} employee={employee} />)}
+            </div>
+        </>
     );
 }
 
