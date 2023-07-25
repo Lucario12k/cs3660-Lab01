@@ -6,6 +6,13 @@ import EditorPanel from './EditorPanel';
 
 function App() {
   const [searchTerms, setSearchTerms] = useState("");
+  const [targetId, setTargetId] = useState(-2);
+  const [refresh, setRefresh] = useState(false);
+
+  function refreshSearch() {
+    setRefresh(false);
+    setRefresh(true);
+  }
 
   return (
     <div className="App">
@@ -13,34 +20,13 @@ function App() {
         <SearchBar onSearch={setSearchTerms} />
       </header>
       <div className="list">
-        <EmployeeList searchTerms={searchTerms} />
+        <EmployeeList searchTerms={searchTerms} setTargetId={setTargetId} />
       </div>
       <div className="editor">
-        <EditorPanel />
+        <EditorPanel targetId={targetId} setTargetId={setTargetId} refreshSearch={refreshSearch} />
       </div>
     </div>
   );
 }
-
-/*
-import EmployeeDeleter from './EmployeeDeleter';
-import EmployeeGetterAll from './EmployeeGetterAll';
-import EmployeeUpdater from './EmployeeUpdater';
-
-function App() {
-  return (
-    <div className="App">
-      <div>
-        <EmployeeDeleter/>
-      </div>
-      <div>
-        <EmployeeGetterAll/>
-      </div>
-      <div>
-        <EmployeeUpdater/>
-      </div>
-    </div>
-  );
-}*/
 
 export default App;
