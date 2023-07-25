@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { getById, postNewEmployee, updateById } from './api';
+import { postNewEmployee, updateById } from './api';
 import './EditorPanel.css';
+import ResultDialogue from './ResultDialogue';
 
 function EditorPanel(props) {
     const [name, setName] = useState("");
     const [title, setTitle] = useState("");
     const [avatar, setAvatar] = useState("");
+    const [dialogue, setDialogue] = useState(<></>)
 
     async function handleCreateNew(event) {
         props.setTargetId(-1);
         setName("");
         setTitle("");
         setAvatar("");
+        refreshOverwrite("", "", "");
     }
 
     async function handleSubmit(event) {
@@ -29,6 +32,7 @@ function EditorPanel(props) {
     function handleCancel() {
         props.setTargetId(-2);
         props.refreshSearch();
+        showDialogue("Error", "Cancelled");
     }
 
     function handleSave() {
@@ -52,9 +56,9 @@ function EditorPanel(props) {
         const res = await postNewEmployee(employee);
 
         if (res.status == 201) {
-            alert(`Successfully created new employee`);
+            showDialogue("Success", "Successfully created new employee.", true);
         } else {
-            alert(`Error ${res.status}: ${res.statusText}`);
+            showDialogue(`Error ${res.status}`, res.statusText, false);
         }
     }
 
@@ -62,19 +66,49 @@ function EditorPanel(props) {
         const res = await updateById(empId, employee);
 
         if (res.status == 204) {
-            alert(`Successfully updated employee #${empId}.`);
+            showDialogue("Success", `Successfully updated employee #${empId}.`, true);
         } else {
-            alert(`Error ${res.status}: ${res.statusText}`);
+            showDialogue(`Error ${res.status}`, res.statusText, false);
         }
+    }
+
+    async function refreshOverwrite(name_, title_, avatar_) {
+        if (name_ == null) {
+            name_ = name;
+        }
+        if (title_ == null) {
+            title_ = title;
+        }
+        if (avatar_ == null) {
+            avatar_ = avatar;
+        }
+
+        const employee = {
+            id: props.targetId,
+            name: name_,
+            title: title_,
+            avatar: avatar_
+        };
+
+        props.setOverwrite(employee);
+    }
+
+    function showDialogue(title, contents, success) {
+        setDialogue(<ResultDialogue title={title} contents={contents} onClose={deleteDialogue} success={success} />);
+    }
+
+    function deleteDialogue() {
+        setDialogue(<></>);
     }
 
     return (
         <div className="EditorPanel">
+            {dialogue}
             <div className="NoneSelected" style={{ display: (props.targetId === -2) ? 'block' : 'none' }}>
                 <button onClick={handleCreateNew}>Create New</button>
             </div>
             <div className="CardSelected" style={{ display: (props.targetId !== -2) ? 'block' : 'none' }}>
-                <img src={avatar} />
+                <img src={avatar} alt="Avatar" />
                 <form onSubmit={handleSubmit}>
                     <label id="editor-label-name" htmlFor="editor-input-name">
                         Name:
@@ -84,7 +118,7 @@ function EditorPanel(props) {
                         id="editor-input-name"
                         placeholder="Enter Name Here"
                         value={name}
-                        onChange={(e) => setName(e.target.value)} />
+                        onChange={(e) => { setName(e.target.value); refreshOverwrite(e.target.value, null, null); }} />
 
                     <label id="editor-label-title" htmlFor="editor-input-title">
                         Title:
@@ -94,7 +128,7 @@ function EditorPanel(props) {
                         id="editor-input-title"
                         placeholder="Enter Title Here"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)} />
+                        onChange={(e) => { setTitle(e.target.value); refreshOverwrite(null, e.target.value, null); }} />
 
                     <label id="editor-label-avatar" htmlFor="editor-input-avatar">
                         Avatar:
@@ -104,7 +138,7 @@ function EditorPanel(props) {
                         id="editor-input-avatar"
                         placeholder="Leave Empty for Default"
                         value={avatar}
-                        onChange={(e) => setAvatar(e.target.value)} />
+                        onChange={(e) => { setAvatar(e.target.value); refreshOverwrite(null, null, e.target.value); }} />
 
                     <input id="editor-cancel" type="submit" value="Cancel" />
                     <input id="editor-save" type="submit" value="Save" />
