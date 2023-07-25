@@ -1,26 +1,22 @@
 import { useState } from 'react';
-import { postNewEmployee, updateById } from './api';
+import { getById, postNewEmployee, updateById } from './api';
 import './EditorPanel.css';
 import ResultDialogue from './ResultDialogue';
 
 function EditorPanel(props) {
-    const [name, setName] = useState("");
-    const [title, setTitle] = useState("");
-    const [avatar, setAvatar] = useState("");
-    const [dialogue, setDialogue] = useState(<></>)
+    const [dialogue, setDialogue] = useState(<></>);
 
     async function handleCreateNew(event) {
         props.setTargetId(-1);
-        setName("");
-        setTitle("");
-        setAvatar("");
-        refreshOverwrite("", "", "");
+        refreshOverwrite("", "", "", -1);
     }
 
     async function handleSubmit(event) {
         event.preventDefault();
 
-        setAvatar("https://api.dicebear.com/6.x/bottts/svg?seed=" + encodeURIComponent(name));
+        refreshOverwrite(null, null,
+            "https://api.dicebear.com/6.x/bottts/svg?seed=" + encodeURIComponent(props.overwrite.name)
+        );
 
         if (event.nativeEvent.submitter.id == "editor-cancel") {
             handleCancel();
@@ -32,14 +28,13 @@ function EditorPanel(props) {
     function handleCancel() {
         props.setTargetId(-2);
         props.refreshSearch();
-        showDialogue("Error", "Cancelled");
     }
 
     function handleSave() {
         const employee = {
-            name: name,
-            title: title,
-            avatar: avatar
+            name: props.overwrite.name,
+            title: props.overwrite.title,
+            avatar: props.overwrite.avatar
         };
 
         if (props.targetId == -1) {
@@ -72,19 +67,22 @@ function EditorPanel(props) {
         }
     }
 
-    async function refreshOverwrite(name_, title_, avatar_) {
+    async function refreshOverwrite(name_, title_, avatar_, id_) {
         if (name_ == null) {
-            name_ = name;
+            name_ = props.overwrite.name;
         }
         if (title_ == null) {
-            title_ = title;
+            title_ = props.overwrite.title;
         }
         if (avatar_ == null) {
-            avatar_ = avatar;
+            avatar_ = props.overwrite.avatar;
+        }
+        if (id_ == null) {
+            id_ = props.targetId;
         }
 
         const employee = {
-            id: props.targetId,
+            id: id_,
             name: name_,
             title: title_,
             avatar: avatar_
@@ -108,7 +106,7 @@ function EditorPanel(props) {
                 <button onClick={handleCreateNew}>Create New</button>
             </div>
             <div className="CardSelected" style={{ display: (props.targetId !== -2) ? 'block' : 'none' }}>
-                <img src={avatar} alt="Avatar" />
+                <img src={props.overwrite.avatar} alt="Avatar" />
                 <form onSubmit={handleSubmit}>
                     <label id="editor-label-name" htmlFor="editor-input-name">
                         Name:
@@ -117,8 +115,8 @@ function EditorPanel(props) {
                         type="text"
                         id="editor-input-name"
                         placeholder="Enter Name Here"
-                        value={name}
-                        onChange={(e) => { setName(e.target.value); refreshOverwrite(e.target.value, null, null); }} />
+                        value={props.overwrite.name}
+                        onChange={(e) => { refreshOverwrite(e.target.value, null, null); }} />
 
                     <label id="editor-label-title" htmlFor="editor-input-title">
                         Title:
@@ -127,8 +125,8 @@ function EditorPanel(props) {
                         type="text"
                         id="editor-input-title"
                         placeholder="Enter Title Here"
-                        value={title}
-                        onChange={(e) => { setTitle(e.target.value); refreshOverwrite(null, e.target.value, null); }} />
+                        value={props.overwrite.title}
+                        onChange={(e) => { refreshOverwrite(null, e.target.value, null); }} />
 
                     <label id="editor-label-avatar" htmlFor="editor-input-avatar">
                         Avatar:
@@ -137,8 +135,8 @@ function EditorPanel(props) {
                         type="text"
                         id="editor-input-avatar"
                         placeholder="Leave Empty for Default"
-                        value={avatar}
-                        onChange={(e) => { setAvatar(e.target.value); refreshOverwrite(null, null, e.target.value); }} />
+                        value={props.overwrite.avatar}
+                        onChange={(e) => { refreshOverwrite(null, null, e.target.value); }} />
 
                     <input id="editor-cancel" type="submit" value="Cancel" />
                     <input id="editor-save" type="submit" value="Save" />
