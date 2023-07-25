@@ -65,23 +65,10 @@ function EmployeeList(props) {
         }
     });
 
-    async function handleClick() {
-        const res = await getAll();
-        if (res.status != 200) {
-            showDialogue(`Error ${res.status}`, res.statusText, false);
-            return;
-        }
-        const data = await res.json();
-        setEmployees(data);
-    }
-
     return (
-        <>
-            <button onClick={handleClick}>Get All</button>
-            <div className="EmployeeList">
-                {getEmployeeCardsOverwritten()}
-            </div>
-        </>
+        <div className="EmployeeList">
+            {getEmployeeCardsOverwritten()}
+        </div>
     );
 }
 
