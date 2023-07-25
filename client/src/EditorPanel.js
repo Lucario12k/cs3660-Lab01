@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { getById, postNewEmployee, updateById } from './api';
 import './EditorPanel.css';
 
-function EditorPanel() {
+function EditorPanel(props) {
     const [name, setName] = useState("");
     const [title, setTitle] = useState("");
     const [avatar, setAvatar] = useState("");
-    const [cardSelected, setCardSelected] = useState(false);
 
     async function handleCreateNew(event) {
-        console.log("New");
+        props.setTargetId(-1);
+        setName("");
+        setTitle("");
+        setAvatar("");
     }
 
     async function handleSubmit(event) {
@@ -25,7 +27,8 @@ function EditorPanel() {
     }
 
     function handleCancel() {
-        console.log("Cancel");
+        props.setTargetId(-2);
+        props.refreshSearch();
     }
 
     function handleSave() {
@@ -35,23 +38,42 @@ function EditorPanel() {
             avatar: avatar
         };
 
-        console.log("Save");
+        if (props.targetId == -1) {
+            handleSaveNew(employee);
+        } else {
+            handleSaveUpdate(props.targetId, employee);
+        }
 
-        /*const res = await updateById(empId, employee);
+        props.setTargetId(-2);
+        props.refreshSearch();
+    }
+
+    async function handleSaveNew(employee) {
+        const res = await postNewEmployee(employee);
+
+        if (res.status == 201) {
+            alert(`Successfully created new employee`);
+        } else {
+            alert(`Error ${res.status}: ${res.statusText}`);
+        }
+    }
+
+    async function handleSaveUpdate(empId, employee) {
+        const res = await updateById(empId, employee);
 
         if (res.status == 204) {
             alert(`Successfully updated employee #${empId}.`);
         } else {
             alert(`Error ${res.status}: ${res.statusText}`);
-        }*/
+        }
     }
 
     return (
         <div className="EditorPanel">
-            <div className="NoneSelected" style={{ display: !cardSelected ? 'block' : 'none' }}>
+            <div className="NoneSelected" style={{ display: (props.targetId === -2) ? 'block' : 'none' }}>
                 <button onClick={handleCreateNew}>Create New</button>
             </div>
-            <div className="CardSelected" style={{ display: cardSelected ? 'block' : 'none' }}>
+            <div className="CardSelected" style={{ display: (props.targetId !== -2) ? 'block' : 'none' }}>
                 <img src={avatar} />
                 <form onSubmit={handleSubmit}>
                     <label id="editor-label-name" htmlFor="editor-input-name">
