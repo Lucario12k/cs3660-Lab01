@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAll, getAllBySearch } from './api';
+import { getAll, getAllBySearch, deleteById } from './api';
 import EmployeeCard from './EmployeeCard';
 import './EmployeeList.css';
 import ResultDialogue from './ResultDialogue';
@@ -32,7 +32,12 @@ function EmployeeList(props) {
             empCards.push(props.overwrite);
         }
 
-        return empCards.map(employee => <EmployeeCard key={employee.id} employee={employee} />);
+        return empCards.map(employee => <EmployeeCard
+            key={employee.id}
+            employee={employee}
+            setTargetEmployee={setTargetEmployee}
+            deleteEmployee={deleteEmployee}
+        />);
     }
 
     async function getAllEmployees() {
@@ -57,6 +62,26 @@ function EmployeeList(props) {
         setEmployees(data);
     }
 
+    async function deleteEmployee(id) {
+        const res = await deleteById(id);
+
+        if (res.status == 204) {
+            showDialogue("Success", `Successfully deleted employee #${id}.`, true);
+        } else {
+            showDialogue(`Error ${res.status}`, res.statusText, false);
+        }
+
+        if (props.targetId == id) {
+            props.setTargetId(-2);
+        }
+        props.refreshSearch();
+    }
+
+    function setTargetEmployee(employee) {
+        props.setTargetId(employee.id);
+        props.setOverwrite(employee);
+    }
+
     useEffect(() => {
         if (props.searchTerms.length === 0) {
             getAllEmployees();
@@ -67,6 +92,7 @@ function EmployeeList(props) {
 
     return (
         <div className="EmployeeList">
+            {dialogue}
             {getEmployeeCardsOverwritten()}
         </div>
     );
