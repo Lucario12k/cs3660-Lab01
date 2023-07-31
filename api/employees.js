@@ -120,7 +120,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     const id = req.params.id;
     const employee = req.body;
-    const queryTemplate = "UPDATE employees SET (name, title, avatar)  = ($2, $3, $4) WHERE id = $1";
+    const queryTemplate = "UPDATE employees SET (name, title, avatar) = ($2, $3, $4) WHERE id = $1";
 
     if (employee.avatar == "") {
         employee.avatar = "https://api.dicebear.com/6.x/bottts/svg?seed=" + encodeURIComponent(employee.name);
@@ -142,7 +142,7 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
     const id = req.params.id;
-    const queryTemplate = "DELETE FROM employees WHERE id = $1";
+    const queryTemplate = "UPDATE employees SET active = FALSE WHERE id = $1";
 
     await dbClient
         .query(queryTemplate, [id])
