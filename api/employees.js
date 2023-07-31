@@ -12,9 +12,12 @@ dbClient.connect();
 
 router.use(express.urlencoded({ extended: false }));
 
-router.get("/search/:terms", async (req, res) => {
+async function searchWithParameters(req, res, inactiveOnly) {
     const terms = "%" + req.params.terms + "%";
-    const queryTemplate = "SELECT * FROM employees WHERE name LIKE $1";
+    let queryTemplate = "SELECT * FROM employees WHERE (active AND name LIKE $1)";
+    if (inactiveOnly) {
+        queryTemplate = "SELECT * FROM employees WHERE (NOT active AND name LIKE $1)";
+    }
 
     const results = await dbClient
         .query(queryTemplate, [terms])
@@ -32,6 +35,14 @@ router.get("/search/:terms", async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.status(200);
     res.send(JSON.stringify(results));
+}
+
+router.get("/search/:terms", async (req, res) => {
+    await searchWithParameters(req, res, false);
+});
+
+router.get("/disabled/search/:terms", async (req, res) => {
+    await searchWithParameters(req, res, true);
 });
 
 router.get("/:id", async (req, res) => {
@@ -56,9 +67,14 @@ router.get("/:id", async (req, res) => {
     res.send(JSON.stringify(results));
 });
 
-router.get("/", async (req, res) => {
+async function getAll(req, res, inactiveOnly) {
+    let queryTemplate = "SELECT * FROM employees WHERE active";
+    if (inactiveOnly) {
+        queryTemplate = "SELECT * FROM employees WHERE NOT active";
+    }
+
     const results = await dbClient
-        .query("SELECT * FROM employees")
+        .query(queryTemplate)
         .then((payload) => {
             return payload.rows;
         })
@@ -69,6 +85,14 @@ router.get("/", async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.status(200);
     res.send(JSON.stringify(results));
+}
+
+router.get("/disabled", async (req, res) => {
+    await getAll(req, res, true);
+});
+
+router.get("/", async (req, res) => {
+    await getAll(req, res, false);
 });
 
 router.post("/", async (req, res) => {
