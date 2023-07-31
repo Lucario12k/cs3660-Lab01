@@ -4,6 +4,7 @@ CREATE TABLE employees
     name text,
     title text,
     avatar text,
+    active boolean DEFAULT TRUE,
     CONSTRAINT employees_pkey PRIMARY KEY (id)
 );
 
