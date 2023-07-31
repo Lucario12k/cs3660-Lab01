@@ -117,6 +117,24 @@ router.post("/", async (req, res) => {
     res.send(JSON.stringify(results));
 });
 
+router.put("/activate/:id", async (req, res) => {
+    const id = req.params.id;
+    const queryTemplate = "UPDATE employees SET active = TRUE WHERE id = $1";
+
+    await dbClient
+        .query(queryTemplate, [id])
+        .then((payload) => {
+            if (payload.rowCount == 0) {
+                res.sendStatus(404);
+            } else {
+                res.sendStatus(204);
+            }
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+});
+
 router.put("/:id", async (req, res) => {
     const id = req.params.id;
     const employee = req.body;
