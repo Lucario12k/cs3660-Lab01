@@ -41,7 +41,7 @@ router.get("/search/:terms", async (req, res) => {
     await searchWithParameters(req, res, false);
 });
 
-router.get("/disabled/search/:terms", async (req, res) => {
+router.get("/inactive/search/:terms", async (req, res) => {
     await searchWithParameters(req, res, true);
 });
 
@@ -87,7 +87,7 @@ async function getAll(req, res, inactiveOnly) {
     res.send(JSON.stringify(results));
 }
 
-router.get("/disabled", async (req, res) => {
+router.get("/inactive", async (req, res) => {
     await getAll(req, res, true);
 });
 
