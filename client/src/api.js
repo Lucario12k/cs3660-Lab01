@@ -1,13 +1,13 @@
-function getAll() {
-    return fetch('/api/employees');
+function getAll(active = true) {
+    return fetch(`/api/employees${!active ? '/inactive' : ''}`);
 }
 
 function getById(id) {
     return fetch(`/api/employees/${id}`);
 }
 
-function getAllBySearch(terms) {
-    return fetch(`/api/employees/search/${encodeURIComponent(terms)}`);
+function getAllBySearch(terms, active = true) {
+    return fetch(`/api/employees${!active ? '/inactive' : ''}/search/${encodeURIComponent(terms)}`);
 }
 
 function postNewEmployee(employee) {
@@ -46,4 +46,10 @@ function deleteById(id) {
     });
 }
 
-export { getAll, getById, getAllBySearch, postNewEmployee, updateById, deleteById };
+function activateById(id) {
+    return fetch(`/api/employees/activate/${id}`, {
+        method: 'PUT'
+    });
+}
+
+export { getAll, getById, getAllBySearch, postNewEmployee, updateById, deleteById, activateById };
