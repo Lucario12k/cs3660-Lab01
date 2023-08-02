@@ -45,28 +45,6 @@ router.get("/inactive/search/:terms", async (req, res) => {
     await searchWithParameters(req, res, true);
 });
 
-router.get("/:id", async (req, res) => {
-    const id = req.params.id;
-    const queryTemplate = "SELECT * FROM employees WHERE id = $1";
-
-    const results = await dbClient
-        .query(queryTemplate, [id])
-        .then((payload) => {
-            return payload.rows;
-        })
-        .catch((err) => {
-            res.status(400).send(err);
-        });
-
-    if (results.rowCount == 0) {
-        res.sendStatus(404);
-    }
-
-    res.setHeader("Content-Type", "application/json");
-    res.status(200);
-    res.send(JSON.stringify(results));
-});
-
 async function getAll(req, res, inactiveOnly) {
     let queryTemplate = "SELECT * FROM employees WHERE active";
     if (inactiveOnly) {
@@ -89,6 +67,28 @@ async function getAll(req, res, inactiveOnly) {
 
 router.get("/inactive", async (req, res) => {
     await getAll(req, res, true);
+});
+
+router.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    const queryTemplate = "SELECT * FROM employees WHERE id = $1";
+
+    const results = await dbClient
+        .query(queryTemplate, [id])
+        .then((payload) => {
+            return payload.rows;
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+
+    if (results.rowCount == 0) {
+        res.sendStatus(404);
+    }
+
+    res.setHeader("Content-Type", "application/json");
+    res.status(200);
+    res.send(JSON.stringify(results));
 });
 
 router.get("/", async (req, res) => {
