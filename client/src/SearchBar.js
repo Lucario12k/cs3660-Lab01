@@ -18,8 +18,8 @@ function SearchBar(props) {
             <input
                 type="checkbox"
                 id="searchbar-input-active"
-                value={inactiveOnly}
-                onChange={(e) => setInactiveOnly(e.target.value)} />
+                checked={inactiveOnly}
+                onChange={(e) => setInactiveOnly(e.target.checked)} />
             <input
                 class="text-entry"
                 type="text"
