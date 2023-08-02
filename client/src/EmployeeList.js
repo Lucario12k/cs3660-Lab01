@@ -37,6 +37,7 @@ function EmployeeList(props) {
             employee={employee}
             setTargetEmployee={setTargetEmployee}
             deleteEmployee={deleteEmployee}
+            activateEmployee={activateEmployee}
         />);
     }
 
@@ -67,6 +68,21 @@ function EmployeeList(props) {
 
         if (res.status == 204) {
             showDialogue("Success", `Successfully deleted employee #${id}.`, true);
+        } else {
+            showDialogue(`Error ${res.status}`, res.statusText, false);
+        }
+
+        if (props.targetId == id) {
+            props.setTargetId(-2);
+        }
+        props.refreshSearch();
+    }
+
+    async function activateEmployee(id) {
+        const res = await activateById(id);
+
+        if (res.status == 204) {
+            showDialogue("Success", `Successfully activated employee #${id}.`, true);
         } else {
             showDialogue(`Error ${res.status}`, res.statusText, false);
         }
