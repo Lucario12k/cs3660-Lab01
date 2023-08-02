@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAll, getAllBySearch, deleteById } from './api';
+import { getAll, getAllBySearch, deleteById, activateById } from './api';
 import EmployeeCard from './EmployeeCard';
 import './EmployeeList.css';
 import ResultDialogue from './ResultDialogue';
