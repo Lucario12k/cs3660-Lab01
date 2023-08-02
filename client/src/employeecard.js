@@ -6,15 +6,19 @@ function EmployeeCard(props) {
     props.setTargetEmployee(props.employee);
   }
 
-  async function handleDelete(event) {
-    props.deleteEmployee(props.employee.id);
+  async function handleToggle(event) {
+    if (props.employee.active) {
+      props.deleteEmployee(props.employee.id);
+    } else {
+      props.activateEmployee(props.employee.id);
+    }
   }
 
   return (
     <div className="EmployeeCard">
       <div className="icon-list" style={{ display: (props.employee.id !== -1) ? 'block' : 'none' }}>
         <img className="icon" src={require('./pencil-32.png')} onClick={handleEdit} />
-        <img className="icon" src={require('./trash-32.png')} onClick={handleDelete} />
+        <img className="icon" src={require(`./${props.employee.active ? 'trash' : 'untrash'}-32.png`)} onClick={handleToggle} />
       </div>
       <img
         src={props.employee.avatar}
