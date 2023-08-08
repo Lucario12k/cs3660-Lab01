@@ -12,12 +12,9 @@ dbClient.connect();
 
 router.use(express.urlencoded({ extended: false }));
 
-async function searchWithParameters(req, res, inactiveOnly) {
+router.get("/search/:terms", async (req, res) => {
     const terms = "%" + req.params.terms + "%";
-    let queryTemplate = "SELECT * FROM employees WHERE (active AND name LIKE $1)";
-    if (inactiveOnly) {
-        queryTemplate = "SELECT * FROM employees WHERE (NOT active AND name LIKE $1)";
-    }
+    let queryTemplate = "SELECT * FROM employees WHERE name LIKE $1";
 
     const results = await dbClient
         .query(queryTemplate, [terms])
@@ -35,38 +32,6 @@ async function searchWithParameters(req, res, inactiveOnly) {
     res.setHeader("Content-Type", "application/json");
     res.status(200);
     res.send(JSON.stringify(results));
-}
-
-router.get("/search/:terms", async (req, res) => {
-    await searchWithParameters(req, res, false);
-});
-
-router.get("/inactive/search/:terms", async (req, res) => {
-    await searchWithParameters(req, res, true);
-});
-
-async function getAll(req, res, inactiveOnly) {
-    let queryTemplate = "SELECT * FROM employees WHERE active";
-    if (inactiveOnly) {
-        queryTemplate = "SELECT * FROM employees WHERE NOT active";
-    }
-
-    const results = await dbClient
-        .query(queryTemplate)
-        .then((payload) => {
-            return payload.rows;
-        })
-        .catch((err) => {
-            res.status(400).send(err);
-        });
-
-    res.setHeader("Content-Type", "application/json");
-    res.status(200);
-    res.send(JSON.stringify(results));
-}
-
-router.get("/inactive", async (req, res) => {
-    await getAll(req, res, true);
 });
 
 router.get("/:id", async (req, res) => {
@@ -92,7 +57,20 @@ router.get("/:id", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-    await getAll(req, res, false);
+    let queryTemplate = "SELECT * FROM employees";
+
+    const results = await dbClient
+        .query(queryTemplate)
+        .then((payload) => {
+            return payload.rows;
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
+
+    res.setHeader("Content-Type", "application/json");
+    res.status(200);
+    res.send(JSON.stringify(results));
 });
 
 router.post("/", async (req, res) => {
