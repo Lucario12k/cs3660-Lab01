@@ -6,9 +6,15 @@ import EditorPanel from './EditorPanel';
 
 function App() {
   const [searchTerms, setSearchTerms] = useState("");
+  const [inactiveOnly, setInactiveOnly] = useState("");
   const [targetId, setTargetId] = useState(-2);
   const [refresh, setRefresh] = useState(false);
   const [overwrite, setOverwrite] = useState({ id: -2 });
+
+  function setSearchTermsAndToggle(terms, toggle) {
+    setSearchTerms(terms);
+    setInactiveOnly(toggle);
+  }
 
   function refreshSearch() {
     setRefresh(false);
@@ -19,10 +25,10 @@ function App() {
   return (
     <div className="App">
       <header>
-        <SearchBar onSearch={setSearchTerms} />
+        <SearchBar onSearch={setSearchTermsAndToggle} />
       </header>
       <div className="list">
-        <EmployeeList searchTerms={searchTerms} targetId={targetId} setTargetId={setTargetId} refreshSearch={refreshSearch} setOverwrite={setOverwrite} overwrite={overwrite} />
+        <EmployeeList searchTerms={searchTerms} inactiveOnly={!inactiveOnly} targetId={targetId} setTargetId={setTargetId} refreshSearch={refreshSearch} setOverwrite={setOverwrite} overwrite={overwrite} />
       </div>
       <div className="editor">
         <EditorPanel targetId={targetId} setTargetId={setTargetId} refreshSearch={refreshSearch} setOverwrite={setOverwrite} overwrite={overwrite} />

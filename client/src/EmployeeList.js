@@ -42,7 +42,7 @@ function EmployeeList(props) {
     }
 
     async function getAllEmployees() {
-        const res = await getAll();
+        const res = await getAll(props.inactiveOnly);
         if (res.status != 200) {
             showDialogue(`Error ${res.status}`, res.statusText, false);
             return;
@@ -53,7 +53,7 @@ function EmployeeList(props) {
     }
 
     async function getAllEmployeesBySearch(terms) {
-        const res = await getAllBySearch(terms);
+        const res = await getAllBySearch(terms, props.inactiveOnly);
         if (res.status != 200) {
             showDialogue(`Error ${res.status}`, res.statusText, false);
             return;
