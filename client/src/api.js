@@ -1,5 +1,11 @@
+function filterByActive(list, active) {
+    return list.filter((employee) => employee.active == active);
+}
+
 function getAll(active = true) {
-    return fetch(`/api/employees${!active ? '/inactive' : ''}`);
+    let list = fetch(`/api/employees`);
+
+    return filterByActive(list, active);
 }
 
 function getById(id) {
@@ -7,7 +13,9 @@ function getById(id) {
 }
 
 function getAllBySearch(terms, active = true) {
-    return fetch(`/api/employees${!active ? '/inactive' : ''}/search/${encodeURIComponent(terms)}`);
+    let list = fetch(`/api/employees/search/${encodeURIComponent(terms)}`);
+
+    return filterByActive(list, active);
 }
 
 function postNewEmployee(employee) {
