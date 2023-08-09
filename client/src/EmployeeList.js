@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getAll, getAllBySearch, deleteById, activateById, filterByActive } from './api';
+import localforage from 'localforage';
+import { matchSorter } from "match-sorter";
 import EmployeeCard from './EmployeeCard';
 import './EmployeeList.css';
 import ResultDialogue from './ResultDialogue';
@@ -7,6 +9,10 @@ import ResultDialogue from './ResultDialogue';
 function EmployeeList(props) {
     const [employees, setEmployees] = useState([]);
     const [dialogue, setDialogue] = useState(<></>);
+
+    useEffect(() => {
+        localforage.setItem("employees", []);
+    }, [])
 
     function showDialogue(title, contents, success) {
         setDialogue(<ResultDialogue title={title} contents={contents} onClose={deleteDialogue} success={success} />);
@@ -42,29 +48,58 @@ function EmployeeList(props) {
     }
 
     async function getAllEmployees() {
-        const res = await getAll();
+        let data;
 
-        if (res.status != 200) {
-            showDialogue(`Error ${res.status}`, res.statusText, false);
-            return;
+        if (navigator.onLine) {
+            const res = await getAll();
+
+            if (res.status != 200) {
+                showDialogue(`Error ${res.status}`, res.statusText, false);
+                return;
+            }
+
+            const dataRaw = await res.json();
+            localforage.setItem("employees", dataRaw);
+            data = filterByActive(dataRaw, props.inactiveOnly);
+
+        } else {
+            showDialogue("Error", "Currently offline; showing cached employee list.", false);
+            data = localforage.getItem("employees");
+            data = filterByActive(data, props.inactiveOnly);
         }
-        const data = filterByActive(await res.json(), props.inactiveOnly);
 
         setEmployees(data);
     }
 
     async function getAllEmployeesBySearch(terms) {
-        const res = await getAllBySearch(terms);
-        if (res.status != 200) {
-            showDialogue(`Error ${res.status}`, res.statusText, false);
-            return;
+        let data;
+
+        if (navigator.onLine) {
+            const res = await getAllBySearch(terms);
+
+            if (res.status != 200) {
+                showDialogue(`Error ${res.status}`, res.statusText, false);
+                return;
+            }
+
+            data = filterByActive(await res.json(), props.inactiveOnly);
+
+        } else {
+            showDialogue("Error", "Currently offline; showing cached employee list.", false);
+            data = localforage.getItem("employees");
+            data = filterByActive(data, props.inactiveOnly);
+            data = matchSorter(data, terms, { keys: ["name"] });
         }
-        const data = filterByActive(await res.json(), props.inactiveOnly);
 
         setEmployees(data);
     }
 
     async function deleteEmployee(id) {
+        if (!navigator.onLine) {
+            showDialogue("Error", "Currently offline.", false);
+            return;
+        }
+
         const res = await deleteById(id);
 
         if (res.status == 204) {
@@ -80,6 +115,11 @@ function EmployeeList(props) {
     }
 
     async function activateEmployee(id) {
+        if (!navigator.onLine) {
+            showDialogue("Error", "Currently offline.", false);
+            return;
+        }
+
         const res = await activateById(id);
 
         if (res.status == 204) {
