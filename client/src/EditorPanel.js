@@ -7,6 +7,10 @@ function EditorPanel(props) {
     const [dialogue, setDialogue] = useState(<></>);
 
     async function handleCreateNew(event) {
+        if (!navigator.onLine) {
+            showDialogue("Error", "Currently offline; new employee will not be saved.", false);
+        }
+
         props.setTargetId(-1);
         refreshOverwrite("", "", "", -1);
     }
@@ -48,6 +52,11 @@ function EditorPanel(props) {
     }
 
     async function handleSaveNew(employee) {
+        if (!navigator.onLine) {
+            showDialogue("Error", "Currently offline; new employee will not be saved.", false);
+            return;
+        }
+
         const res = await postNewEmployee(employee);
 
         if (res.status == 201) {
@@ -58,6 +67,11 @@ function EditorPanel(props) {
     }
 
     async function handleSaveUpdate(empId, employee) {
+        if (!navigator.onLine) {
+            showDialogue("Error", "Currently offline; employee will not be updated.", false);
+            return;
+        }
+
         const res = await updateById(empId, employee);
 
         if (res.status == 204) {
