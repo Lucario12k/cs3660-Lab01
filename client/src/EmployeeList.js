@@ -63,6 +63,7 @@ function EmployeeList(props) {
             data = filterByActive(dataRaw, props.inactiveOnly);
 
         } else {
+            showDialogue("Error", "Currently offline; showing cached employees.", false);
             data = await localforage.getItem("employees");
             data = filterByActive(data, props.inactiveOnly);
         }
@@ -84,6 +85,7 @@ function EmployeeList(props) {
             data = filterByActive(await res.json(), props.inactiveOnly);
 
         } else {
+            showDialogue("Error", "Currently offline; showing cached employees.", false);
             data = await localforage.getItem("employees");
             data = filterByActive(data, props.inactiveOnly);
             data = matchSorter(data, terms, { keys: ["name"] });
@@ -143,7 +145,7 @@ function EmployeeList(props) {
         } else {
             getAllEmployeesBySearch(props.searchTerms);
         }
-    });
+    }, [props.searchTerms]);
 
     return (
         <div className="EmployeeList">
