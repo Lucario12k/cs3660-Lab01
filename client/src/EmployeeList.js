@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAll, getAllBySearch, deleteById, activateById } from './api';
+import { getAll, getAllBySearch, deleteById, activateById, filterByActive } from './api';
 import EmployeeCard from './EmployeeCard';
 import './EmployeeList.css';
 import ResultDialogue from './ResultDialogue';
@@ -42,23 +42,24 @@ function EmployeeList(props) {
     }
 
     async function getAllEmployees() {
-        const res = await getAll(props.inactiveOnly);
+        const res = await getAll();
+
         if (res.status != 200) {
             showDialogue(`Error ${res.status}`, res.statusText, false);
             return;
         }
-        const data = await res.json();
+        const data = filterByActive(await res.json(), props.inactiveOnly);
 
         setEmployees(data);
     }
 
     async function getAllEmployeesBySearch(terms) {
-        const res = await getAllBySearch(terms, props.inactiveOnly);
+        const res = await getAllBySearch(terms);
         if (res.status != 200) {
             showDialogue(`Error ${res.status}`, res.statusText, false);
             return;
         }
-        const data = await res.json();
+        const data = filterByActive(await res.json(), props.inactiveOnly);
 
         setEmployees(data);
     }

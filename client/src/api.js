@@ -1,24 +1,20 @@
-function filterByActive(list, active) {
+export function filterByActive(list, active) {
     return list.filter((employee) => employee.active == active);
 }
 
-function getAll(active = true) {
-    let list = fetch(`/api/employees`);
-
-    return filterByActive(list, active);
+export function getAll() {
+    return fetch(`/api/employees`);
 }
 
-function getById(id) {
+export function getById(id) {
     return fetch(`/api/employees/${id}`);
 }
 
-function getAllBySearch(terms, active = true) {
-    let list = fetch(`/api/employees/search/${encodeURIComponent(terms)}`);
-
-    return filterByActive(list, active);
+export function getAllBySearch(terms) {
+    return fetch(`/api/employees/search/${encodeURIComponent(terms)}`);
 }
 
-function postNewEmployee(employee) {
+export function postNewEmployee(employee) {
     const formData = new URLSearchParams();
     formData.append('name', employee.name);
     formData.append('title', employee.title);
@@ -33,7 +29,7 @@ function postNewEmployee(employee) {
     });
 }
 
-function updateById(id, employee) {
+export function updateById(id, employee) {
     const formData = new URLSearchParams();
     formData.append('name', employee.name);
     formData.append('title', employee.title);
@@ -48,16 +44,14 @@ function updateById(id, employee) {
     });
 }
 
-function deleteById(id) {
+export function deleteById(id) {
     return fetch(`/api/employees/${id}`, {
         method: 'DELETE'
     });
 }
 
-function activateById(id) {
+export function activateById(id) {
     return fetch(`/api/employees/activate/${id}`, {
         method: 'PUT'
     });
 }
-
-export { getAll, getById, getAllBySearch, postNewEmployee, updateById, deleteById, activateById };
